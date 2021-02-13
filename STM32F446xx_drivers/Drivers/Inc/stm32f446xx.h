@@ -17,6 +17,24 @@
 #define GPIO_PIN_RESET					DISABLE
 
 /*
+ * ARM Cortex-M4 Specific Addresses
+ */
+
+#define NVIC_ISER0						((volatile uint32_t *) 0xE000E100)
+#define NVIC_ISER1						((volatile uint32_t *) 0xE000E104)
+#define NVIC_ISER2						((volatile uint32_t *) 0xE000E108)
+#define NVIC_ISER3						((volatile uint32_t *) 0xE000E10C)
+
+#define NVIC_ICER0						((volatile uint32_t *) 0XE000E180)
+#define NVIC_ICER1						((volatile uint32_t *) 0XE000E184)
+#define NVIC_ICER2						((volatile uint32_t *) 0XE000E188)
+#define NVIC_ICER3						((volatile uint32_t *) 0XE000E18C)
+
+#define NVIC_IPR_BASE_ADDR				((volatile uint32_t *) 0xE000E400)
+
+#define PRIORITY_BITS_NUMBER			0x04
+
+/*
  * Memory Base Addresses
  */
 
@@ -82,7 +100,7 @@
 #define GPIOG_BASE_ADDR					( AHB1_BASE_ADDR + 0x1800 )
 #define GPIOH_BASE_ADDR					( AHB1_BASE_ADDR + 0x1C00 )
 
-#define RCC_BASE_ADDR					( AHB1_BASE_ADDR + 0x3000 )
+#define RCC_BASE_ADDR					( AHB1_BASE_ADDR + 0x3800 )
 
 /*
  ******************** Peripheral Register Definitions Structures ********************
@@ -130,7 +148,7 @@ typedef struct
 	volatile uint32_t DCKCFGR2;			// RCC dedicated clocks configuration register 2
 }RCC_RegDef_t;
 
-#define RCC								( ( RCC_RefDef_t * ) RCC_BASE_ADDR )
+#define RCC								( ( RCC_RegDef_t * ) RCC_BASE_ADDR )
 
 /*
  * GPIO
@@ -149,14 +167,46 @@ typedef struct
 	volatile uint32_t AFR[2];			// GPIO alternate function register
 }GPIO_RegDef_t;
 
-#define GPIOA 							( ( GPIO_RegDef_t * ) GPIOA_BASE_ADDR )
-#define GPIOB 							( ( GPIO_RegDef_t * ) GPIOB_BASE_ADDR )
-#define GPIOC 							( ( GPIO_RegDef_t * ) GPIOC_BASE_ADDR )
-#define GPIOD 							( ( GPIO_RegDef_t * ) GPIOD_BASE_ADDR )
-#define GPIOE 							( ( GPIO_RegDef_t * ) GPIOE_BASE_ADDR )
-#define GPIOF 							( ( GPIO_RegDef_t * ) GPIOF_BASE_ADDR )
-#define GPIOG 							( ( GPIO_RegDef_t * ) GPIOG_BASE_ADDR )
-#define GPIOH 							( ( GPIO_RegDef_t * ) GPIOH_BASE_ADDR )
+#define GPIOA 							((GPIO_RegDef_t *) GPIOA_BASE_ADDR)
+#define GPIOB 							((GPIO_RegDef_t *) GPIOB_BASE_ADDR)
+#define GPIOC 							((GPIO_RegDef_t *) GPIOC_BASE_ADDR)
+#define GPIOD 							((GPIO_RegDef_t *) GPIOD_BASE_ADDR)
+#define GPIOE 							((GPIO_RegDef_t *) GPIOE_BASE_ADDR)
+#define GPIOF 							((GPIO_RegDef_t *) GPIOF_BASE_ADDR)
+#define GPIOG 							((GPIO_RegDef_t *) GPIOG_BASE_ADDR)
+#define GPIOH 							((GPIO_RegDef_t *) GPIOH_BASE_ADDR)
+
+/*
+ * EXTI
+ */
+
+typedef struct
+{
+	volatile uint32_t IMR;				// Interrupt mask register
+	volatile uint32_t EMR;				// Event mask register
+	volatile uint32_t RTSR;				// Rising trigger selection register
+	volatile uint32_t FTSR;				// Falling trigger selection register
+	volatile uint32_t SWIER;			// Software interrupt event register
+	volatile uint32_t PR;				// Pending register
+}EXTI_RegDef_t;
+
+#define EXTI							((EXTI_RegDef_t *) EXTI_BASE_ADDR)
+
+/*
+ * SYSCFG
+ */
+
+typedef struct
+{
+	volatile uint32_t MEMRMP;			// SYSCFG memory remap register
+	volatile uint32_t PMC;				// SYSCFG peripheral mode configuration register
+	volatile uint32_t EXTICR[4];		// SYSCFG external interrupt configuration registers
+	volatile uint32_t CMPCR;			// Compensation cell control register
+	volatile uint32_t CFGR;				// SYSCFG configuration register
+}SYSCFG_RegDef_t;
+
+#define SYSCFG							((SYSCFG_RegDef_t *) SYSCFG_BASE_ADDR)
+
 
 /*
  * ******************** Macros ********************
@@ -248,6 +298,30 @@ typedef struct
 #define GPIOF_REG_RESET()				do{RCC->AHB1RSTR |=  (1 << 5); RCC->AHB1RSTR &= ~(1 << 5);}while(0)
 #define GPIOG_REG_RESET()				do{RCC->AHB1RSTR |=  (1 << 6); RCC->AHB1RSTR &= ~(1 << 6);}while(0)
 #define GPIOH_REG_RESET()				do{RCC->AHB1RSTR |=  (1 << 7); RCC->AHB1RSTR &= ~(1 << 7);}while(0)
+
+/*
+ * Return Port Code Macro
+ */
+
+#define GET_GPIO_PORT(x)				(x == GPIOA) ? 0 : \
+										(x == GPIOB) ? 1 : \
+										(x == GPIOC) ? 2 : \
+										(x == GPIOD) ? 3 : \
+										(x == GPIOE) ? 4 : \
+										(x == GPIOF) ? 5 : \
+										(x == GPIOG) ? 6 : 7
+
+/*
+ * IRQ Numbers
+ */
+
+#define IRQ_EXTI0						0x06
+#define IRQ_EXTI1						0x07
+#define IRQ_EXTI2						0x08
+#define IRQ_EXTI3						0x09
+#define IRQ_EXTI4						0x0A
+#define IRQ_EXTI9_5						0x17
+#define IRQ_EXIT15_10					0x28
 
 
 #endif /* STM32F446XX_H */
