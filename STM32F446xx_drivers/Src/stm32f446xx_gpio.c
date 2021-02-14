@@ -381,7 +381,7 @@ void GPIO_IRQ_Interrupt_Config(uint8_t IRQNumber, uint8_t state)
  *
  * 	@note					- none
  */
-void GPIO_IRQ_Priority_Config(uint8_t IRQNumber, uint8_t IRQPriority)
+void GPIO_IRQ_Priority_Config(uint8_t IRQNumber, uint32_t IRQPriority)
 {
 	uint8_t iprx, iprx_section, shift;
 
@@ -389,7 +389,7 @@ void GPIO_IRQ_Priority_Config(uint8_t IRQNumber, uint8_t IRQPriority)
 	iprx_section 	= IRQNumber % 4;
 	shift			= (iprx_section * 8) + (8 - PRIORITY_BITS_NUMBER);
 
-	*(NVIC_IPR_BASE_ADDR + (iprx * 4)) |= (IRQPriority << shift);
+	*(NVIC_IPR_BASE_ADDR + iprx) |= (IRQPriority << shift);
 }
 
 

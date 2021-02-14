@@ -6,6 +6,7 @@
  */
 
 #include <stdint.h>
+#include <string.h>
 
 /*
  * Generic Macros
@@ -322,6 +323,24 @@ typedef struct
 #define IRQ_EXTI4						0x0A
 #define IRQ_EXTI9_5						0x17
 #define IRQ_EXIT15_10					0x28
+
+#define IRQ_PRI0						0x00
+#define IRQ_PRI1						0x01
+#define IRQ_PRI2						0x02
+#define IRQ_PRI3						0x03
+#define IRQ_PRI4						0x04
+#define IRQ_PRI5						0x05
+#define IRQ_PRI6						0x06
+#define IRQ_PRI7						0x07
+#define IRQ_PRI8						0x08
+#define IRQ_PRI9						0x09
+#define IRQ_PRI10						0x0A
+#define IRQ_PRI11						0x0B
+#define IRQ_PRI12						0x0C
+#define IRQ_PRI13						0x0D
+#define IRQ_PRI14						0x0E
+#define IRQ_PRI15						0x0F
+
 
 
 #endif /* STM32F446XX_H */
